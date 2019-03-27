@@ -23,7 +23,7 @@ Paws.App = (function () {
         'home': {href: '/console'},
         // Services
         '.': {click: '#nav-servicesMenu :first'},
-        'esc': {func: ['navbar', 'esc']},
+        '#escape': {func: ['navbar', 'esc']},
         'ct': {href: '/cloudtrail/home#/events'},
         'ec2': {href: '/ec2/v2/home#Instances:sort=desc:launchTime'},
         'sec': {href: '/elasticache/home#cache-clusters:'},
@@ -44,12 +44,9 @@ Paws.App = (function () {
         'j': {func: ['navbar', 'next']},
         'k': {func: ['navbar', 'prev']},
         'l': {func: ['navbar', 'select']},
-        'return': {func: ['navbar', 'select']}, // This doesn't work on some services
         // Miscellaneous
         '/': {focus: '.gwt-TextBox:first'},
-        '?': {open: 'https://github.com/tombenner/paws#shortcuts'},
-        // lambda searchbox ???? WIP
-        'lam': {focus: '.inputAndSuggestions.input'}
+        '?': {open: 'https://github.com/tombenner/paws#shortcuts'}
     };
 
     self.init = function () {
@@ -61,7 +58,11 @@ Paws.App = (function () {
     self.initCommands = function () {
         _.each(self.commandsCallbacks, function (value, key) {
             var command = key;
-            command = command.split('').join(' ');
+            if (command.startsWith('#')) {
+                command = command.substring(1);
+            } else {
+                command = command.split('').join(' ');
+            }
             var callback;
             if (value['href']) {
                 callback = function () {
@@ -97,6 +98,13 @@ Paws.App = (function () {
                 return false;
             });
         });
+        var defaultStopCallback = Mousetrap.stopCallback;
+        Mousetrap.stopCallback = function (e, element, combo) {
+            if (combo == 'escape') {
+                return !self.navbar.isServicesMenuOpen();
+            }
+            return defaultStopCallback(e, element, combo);
+        };
     };
 
     self.log = function (message) {
@@ -111,11 +119,15 @@ Paws.App = (function () {
 Paws.Navbar = (function () {
     var self = this;
 
-    self.esc = function() {
+    self.isServicesMenuOpen = function() {
         var servicesMenu = jQuery("#servicesMenuContent")[0];
-        if (servicesMenu && servicesMenu.style.display == 'block') {
-            console.log('Hiding services menu');
+        return servicesMenu && servicesMenu.style.display == 'block';
+    }
+
+    self.esc = function() {
+        if (self.isServicesMenuOpen()) {
             jQuery('#nav-servicesMenu :first').click();
+            jQuery(document.activeElement).blur();
         }
     }
 
