@@ -23,6 +23,7 @@ Paws.App = (function () {
         'home': {href: '/console'},
         // Services
         '.': {click: '#nav-servicesMenu :first'},
+        'esc': {func: ['navbar', 'escape']},
         'ct': {href: '/cloudtrail/home#/events'},
         'ec2': {href: '/ec2/v2/home#Instances:sort=desc:launchTime'},
         'sec': {href: '/elasticache/home#cache-clusters:'},
@@ -109,6 +110,14 @@ Paws.App = (function () {
 
 Paws.Navbar = (function () {
     var self = this;
+
+    self.esc = function() {
+        var servicesMenu = jQuery("#servicesMenuContent")[0];
+        if (servicesMenu && servicesMenu.style.display == 'block') {
+            console.log('Hiding services menu');
+            jQuery('#nav-servicesMenu :first').click();
+        }
+    }
 
     self.select = function () {
         var selectedAnchor = self.getSelectedAnchor();
