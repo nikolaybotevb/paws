@@ -22,6 +22,7 @@ Paws.App = (function () {
         //Home
         'home': {href: '/console'},
         // Services
+        '.': {click: '#nav-servicesMenu'},
         'ct': {href: '/cloudtrail/home#/events'},
         'ec2': {href: '/ec2/v2/home#Instances:sort=desc:launchTime'},
         'sec': {href: '/elasticache/home#cache-clusters:'},
@@ -70,6 +71,11 @@ Paws.App = (function () {
                 callback = function () {
                     self.log('Opening ' + value['open']);
                     window.open(value['open']);
+                };
+            } else if (value['click']) {
+                callback = function () {
+                    self.log('Clicking ' + value['click']);
+                    jQuery(value['click']).click();
                 };
             } else if (value['focus']) {
                 callback = function () {
