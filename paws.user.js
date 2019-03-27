@@ -22,7 +22,7 @@ Paws.App = (function () {
         //Home
         'home': {href: '/console'},
         // Services
-        '.': {click: '#nav-servicesMenu'},
+        '.': {click: '#nav-servicesMenu :first'},
         'ct': {href: '/cloudtrail/home#/events'},
         'ec2': {href: '/ec2/v2/home#Instances:sort=desc:launchTime'},
         'sec': {href: '/elasticache/home#cache-clusters:'},
